@@ -20,7 +20,7 @@
  * IN THE SOFTWARE.
  */
 
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QTest>
 
 #include <qhttpengine/socket.h>
@@ -59,27 +59,27 @@ private Q_SLOTS:
 
 void TestHandler::testRedirect_data()
 {
-    QTest::addColumn<QRegExp>("pattern");
+    QTest::addColumn<QRegularExpression>("pattern");
     QTest::addColumn<QString>("destination");
     QTest::addColumn<QByteArray>("path");
     QTest::addColumn<int>("statusCode");
     QTest::addColumn<QByteArray>("location");
 
     QTest::newRow("match")
-            << QRegExp("\\w+")
+            << QRegularExpression("\\w+")
             << QString("/two")
             << QByteArray("one")
             << static_cast<int>(QHttpEngine::Socket::Found)
             << QByteArray("/two");
 
     QTest::newRow("no match")
-            << QRegExp("\\d+")
+            << QRegularExpression("\\d+")
             << QString("")
             << QByteArray("test")
             << static_cast<int>(QHttpEngine::Socket::NotFound);
 
     QTest::newRow("captured texts")
-            << QRegExp("(\\d+)")
+            << QRegularExpression("(\\d+)")
             << QString("/path/%1")
             << QByteArray("123")
             << static_cast<int>(QHttpEngine::Socket::Found)
@@ -88,7 +88,7 @@ void TestHandler::testRedirect_data()
 
 void TestHandler::testRedirect()
 {
-    QFETCH(QRegExp, pattern);
+    QFETCH(QRegularExpression, pattern);
     QFETCH(QString, destination);
     QFETCH(QByteArray, path);
     QFETCH(int, statusCode);
@@ -116,25 +116,25 @@ void TestHandler::testRedirect()
 
 void TestHandler::testSubHandler_data()
 {
-    QTest::addColumn<QRegExp>("pattern");
+    QTest::addColumn<QRegularExpression>("pattern");
     QTest::addColumn<QByteArray>("path");
     QTest::addColumn<QString>("pathRemainder");
     QTest::addColumn<int>("statusCode");
 
     QTest::newRow("match")
-            << QRegExp("\\w+")
+            << QRegularExpression("\\w+")
             << QByteArray("test")
             << QString("")
             << static_cast<int>(QHttpEngine::Socket::OK);
 
     QTest::newRow("no match")
-            << QRegExp("\\d+")
+            << QRegularExpression("\\d+")
             << QByteArray("test")
             << QString("")
             << static_cast<int>(QHttpEngine::Socket::NotFound);
 
     QTest::newRow("path")
-            << QRegExp("one/")
+            << QRegularExpression("one/")
             << QByteArray("one/two")
             << QString("two")
             << static_cast<int>(QHttpEngine::Socket::OK);
@@ -142,7 +142,7 @@ void TestHandler::testSubHandler_data()
 
 void TestHandler::testSubHandler()
 {
-    QFETCH(QRegExp, pattern);
+    QFETCH(QRegularExpression, pattern);
     QFETCH(QByteArray, path);
     QFETCH(QString, pathRemainder);
     QFETCH(int, statusCode);

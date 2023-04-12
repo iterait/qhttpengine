@@ -24,7 +24,7 @@
 #include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QHostAddress>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QStringList>
 
 #include <qhttpengine/filesystemhandler.h>
@@ -65,13 +65,13 @@ int main(int argc, char * argv[])
 
     // Build the hierarchy of handlers
     QHttpEngine::FilesystemHandler handler(":/static");
-    handler.addRedirect(QRegExp("^$"), "/index.html");
+    handler.addRedirect(QRegularExpression("^$"), "/index.html");
 
     ApiHandler renameMe;
     QHttpEngine::QObjectHandler apiHandler;
     apiHandler.registerMethod("messages", &renameMe, &ApiHandler::messages);
     apiHandler.registerMethod("messages/new", &renameMe, &ApiHandler::messagesNew);
-    handler.addSubHandler(QRegExp("api/"), &apiHandler);
+    handler.addSubHandler(QRegularExpression("api/"), &apiHandler);
 
     QHttpEngine::Server server(&handler);
 
