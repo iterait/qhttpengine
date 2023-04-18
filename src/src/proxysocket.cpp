@@ -38,13 +38,7 @@ ProxySocket::ProxySocket(Socket *socket, const QString &path, const QHostAddress
 
     connect(&mUpstreamSocket, &QTcpSocket::connected, this, &ProxySocket::onUpstreamConnected);
     connect(&mUpstreamSocket, &QTcpSocket::readyRead, this, &ProxySocket::onUpstreamReadyRead);
-    connect(
-        &mUpstreamSocket,
-        static_cast<void(QAbstractSocket::*)(QAbstractSocket::SocketError)>(&QAbstractSocket::error),
-        this,
-        &ProxySocket::onUpstreamError
-    );
-
+    connect(&mUpstreamSocket, &QAbstractSocket::errorOccurred, this, &ProxySocket::onUpstreamError);
     mUpstreamSocket.connectToHost(address, port);
 }
 
@@ -137,6 +131,7 @@ void ProxySocket::onUpstreamReadyRead()
 
 void ProxySocket::onUpstreamError(QAbstractSocket::SocketError socketError)
 {
+    Q_UNUSED(socketError);
     if (mHeadersParsed) {
         mDownstreamSocket->close();
     } else {
